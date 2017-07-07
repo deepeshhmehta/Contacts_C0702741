@@ -66,4 +66,10 @@ public class AddContactActivity extends AppCompatActivity  implements View.OnCli
         startActivity(in);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        goBackToMain();
+    }
 }

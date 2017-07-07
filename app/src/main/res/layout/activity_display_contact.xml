@@ -6,4 +6,168 @@
     android:layout_height="match_parent"
     tools:context="com.deepeshhmehta.contacts_c0702741.DisplayContact">
 
+
+
+    <LinearLayout
+        android:layout_width="395dp"
+        android:layout_height="587dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="73dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textAlignment="center"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="0.00"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.26"
+                android:text="Name : "
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextFirstName"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:ems="10"
+                android:hint="First Name"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/editTextLastName"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:ems="10"
+                android:hint="Last Name"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="0.00"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <TextView
+                android:id="@+id/textViewNumber"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="Phone : "
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextNumber"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:ems="10"
+                android:hint="Number"
+                android:inputType="phone|text" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <TextView
+                android:id="@+id/textViewEmail"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:text="Email id : "
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:ems="10"
+                android:hint="Email id"
+                android:inputType="textEmailAddress" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_weight="0.79"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+
+            <Button
+                android:id="@+id/buttonCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                android:text="Cancel" />
+
+            <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="wrap_content"
+                android:visibility="invisible"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
+
+            <ImageButton
+                android:id="@+id/imageButtonEdit"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.06"
+                app:srcCompat="@android:drawable/ic_menu_edit"
+                tools:layout_editor_absoluteX="-372dp"
+                tools:layout_editor_absoluteY="693dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
