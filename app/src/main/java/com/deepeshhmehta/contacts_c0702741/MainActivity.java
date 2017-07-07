@@ -14,11 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -52,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
         });
 
         db = new ContactDb(this);
-
-
         lstview = (ListView)findViewById(R.id.listView1);
 
         //obj.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -141,18 +141,26 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(this.LAYOUT_INFLATER_SERVICE);
+        View v;
+        if (view == null) {
+            v = inflater.inflate(R.layout.contact_details_view, null);
+        } else {
+            v = view;
+        }
+        TextView contactName = (TextView) v.findViewById(R.id.contact_name);
+        ImageView delete_button = (ImageView) v.findViewById(R.id.delete_button);
+        LinearLayout layout = (LinearLayout) v.findViewById(R.id.background);
+
         int clr;
-        LinearLayout layout = new LinearLayout(this);
-        ImageButton delete = new ImageButton(this);
-        TextView txtContact = new TextView(this);
 
-        txtContact.setTypeface(Typeface.MONOSPACE);
         final ContactInstance current_contact = ((ContactInstance) ci_list.get(i));
-        txtContact.setTag(Integer.valueOf(current_contact.id));
-        final String studInfo = "" + current_contact.fname + " " + current_contact.lname;
-        txtContact.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
+        contactName.setTag(Integer.valueOf(current_contact.id));
 
-        txtContact.setOnClickListener(new View.OnClickListener() {
+        final String studInfo = "" + current_contact.fname + " " + current_contact.lname;
+        contactName.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
+
+        contactName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int id_To_Search = (int) ((TextView) view).getTag();
@@ -174,37 +182,18 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
             clr = (Color.parseColor("#e6e6e6"));
         }
 
-        txtContact.setBackgroundColor(clr);
-        txtContact.setPadding(5,5,5,5);
-        txtContact.setTextSize(25);
+        layout.setBackgroundColor(clr);
 
-        delete.setImageResource(android.R.drawable.ic_menu_delete);
-        delete.setBackgroundColor(Color.TRANSPARENT);
-        delete.setTag(Integer.valueOf(current_contact.id));
-        delete.setOnClickListener(new View.OnClickListener() {
+        delete_button.setTag(Integer.valueOf(current_contact.id));
+        delete_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDeleteDialog(studInfo,current_contact.id);
             }
         });
 
-        LinearLayout.LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);
-        layout.setLayoutParams(params);
 
-        params = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT,
-                0.25f);
-        txtContact.setLayoutParams(params);
-        params = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT,
-                0.75f);
-        delete.setLayoutParams(params);
-        layout.addView(txtContact);
-        layout.addView(delete);
-
-        return layout;
+        return v;
     }
 
     private void showDeleteDialog(String name, final int id_no) throws Resources.NotFoundException {
