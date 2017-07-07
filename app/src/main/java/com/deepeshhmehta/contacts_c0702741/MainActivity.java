@@ -11,10 +11,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -29,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
     boolean isOdd = true;
     ContactDb db;
     ArrayList<ContactInstance> ci_list;
-    
+    ListView lstview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,17 +47,15 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
             public void onClick(View view) {
                 Intent in = new Intent(MainActivity.this,AddContactActivity.class);
                 startActivity(in);
-                finish();
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+
             }
         });
 
         db = new ContactDb(this);
-        ci_list = db.getAllContacts();
 
-        ListView obj = (ListView)findViewById(R.id.listView1);
-        obj.setAdapter(this);
+
+        lstview = (ListView)findViewById(R.id.listView1);
+
         //obj.setOnItemClickListener(new AdapterView.OnItemClickListener(){
         //    @Override
         //    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
@@ -69,9 +71,33 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
         //        startActivity(intent);
         //    }
         //});
+
+        EditText search = (EditText) findViewById(R.id.search_bar);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ci_list = db.getAllContacts(charSequence.toString());
+                lstview.setAdapter(MainActivity.this);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ci_list = db.getAllContacts();
+        lstview.setAdapter(this);
+    }
 
     @Override
     public boolean areAllItemsEnabled() {
@@ -137,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
                         Intent intent = new Intent(getApplicationContext(),DisplayContact.class);
                         intent.putExtras(dataBundle);
                         startActivity(intent);
-                        finish();
             }
         });
 
@@ -195,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
                         public void onClick(DialogInterface dialog,
                                             int which) {
                             db.deleteAContact(id_no);
-                            goBackToMain();
+                            onResume();
 
 
                         }

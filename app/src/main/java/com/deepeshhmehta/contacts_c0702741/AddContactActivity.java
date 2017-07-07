@@ -62,8 +62,8 @@ public class AddContactActivity extends AppCompatActivity  implements View.OnCli
     }
 
     private void goBackToMain() {
-        Intent in = new Intent(AddContactActivity.this, MainActivity.class);
-        startActivity(in);
+//        Intent in = new Intent(AddContactActivity.this, MainActivity.class);
+//        startActivity(in);
         finish();
     }
 

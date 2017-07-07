@@ -131,8 +131,8 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
     }
 
     private void goBackToMain() {
-        Intent in = new Intent(DisplayContact.this, MainActivity.class);
-        startActivity(in);
+//        Intent in = new Intent(DisplayContact.this, MainActivity.class);
+//        startActivity(in);
         finish();
     }
 

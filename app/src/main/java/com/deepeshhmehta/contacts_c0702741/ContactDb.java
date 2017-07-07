@@ -77,10 +77,11 @@ public class ContactDb extends SQLiteOpenHelper {
 
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + this.table_name +" where fname like '%"+name_like+
-                                            "' OR lname like '%"+name_like+
-                                            "' OR phone like '%"+name_like+
-                                            "' OR email like '%"+name_like+
+        Cursor res =  db.rawQuery( "select * from " + this.table_name +
+                                            " where fname like '%"+name_like+ "%'" +
+                                            " OR lname like '%"+name_like+ "%'" +
+                                            " OR number like '%"+name_like+ "%'" +
+                                            " OR email like '%"+name_like+ "%'" +
                                             " Order By fname", null );
         res.moveToFirst();
 
