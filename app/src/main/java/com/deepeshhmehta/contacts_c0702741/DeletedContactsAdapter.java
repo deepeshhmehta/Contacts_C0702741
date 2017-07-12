@@ -1,15 +1,12 @@
 package com.deepeshhmehta.contacts_c0702741;
 
         import android.content.Context;
-        import android.content.Intent;
         import android.database.DataSetObserver;
         import android.graphics.Color;
-        import android.os.Bundle;
         import android.util.Log;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
-        import android.widget.ImageView;
         import android.widget.LinearLayout;
         import android.widget.ListAdapter;
         import android.widget.TextView;
@@ -18,18 +15,18 @@ package com.deepeshhmehta.contacts_c0702741;
         import java.util.ArrayList;
 
 /**
- * Created by Deepesh on 11/07/2017.
+ * DeletedContactsAdapter Created by Deepesh on 11/07/2017.
  */
 
 
 public class DeletedContactsAdapter implements ListAdapter {
-
+    //declare the required variables
     Context context;
     boolean isOdd = true;
     ArrayList<ContactInstance> ci_list;
 
     public DeletedContactsAdapter(Context con, ContactDb db) throws ParseException {
-        Log.d("DeletedCOntactsAdapter","called");
+        //initialise the values
         context =con;
         ci_list = db.getAllDeletedContacts();
     }
@@ -74,8 +71,10 @@ public class DeletedContactsAdapter implements ListAdapter {
         return false;
     }
 
+    //return elements to populate the listview
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        //initialise the inflator to point at the corresponding instance
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View v;
         if (view == null) {
@@ -83,20 +82,22 @@ public class DeletedContactsAdapter implements ListAdapter {
         } else {
             v = view;
         }
+        //initialise the various elements from the inflator
         TextView contactName = (TextView) v.findViewById(R.id.contact_name);
         TextView deleted_on = (TextView) v.findViewById(R.id.deleted_date);
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.background);
 
         int clr;
-
+        //separate a copy of the contact instance from the data
         final ContactInstance current_contact = ((ContactInstance) ci_list.get(i));
         contactName.setTag(Integer.valueOf(current_contact.id));
 
+        //initialise the header data
         final String studInfo = "" + current_contact.fname + " " + current_contact.lname;
         contactName.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
         Log.d("Deleted Contact: ", studInfo);
 
-
+        //set colour based on the alternating sequence
         if(isOdd){
             isOdd = false;
             clr = (Color.parseColor("#cccccc"));
@@ -107,6 +108,7 @@ public class DeletedContactsAdapter implements ListAdapter {
 
         layout.setBackgroundColor(clr);
 
+        //set the date of the deleted_on
         deleted_on.setText(current_contact.deleted_on);
 
 

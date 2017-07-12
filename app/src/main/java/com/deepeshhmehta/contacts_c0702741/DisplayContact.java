@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 public class DisplayContact extends AppCompatActivity implements View.OnClickListener, TextWatcher{
 
+    //declare the required variables
     TextView title ;
     EditText edtxtfname ,edtxtlname ,edtxtphone ,edtxtemail ;
     ImageButton edit ;
@@ -27,6 +28,7 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_contact);
 
+        //initialise the variables to be used across all functions
         title = (TextView) findViewById(R.id.textViewTitle);
         edtxtfname = (EditText) findViewById(R.id.editTextFirstName);
         edtxtlname = (EditText) findViewById(R.id.editTextLastName);
@@ -36,14 +38,17 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
         cancel = (Button) findViewById(R.id.buttonCancel);
         save = (Button) findViewById(R.id.buttonSave);
 
+        //disable the textfields so that the user cannot edit until he enters the edit mode
         edtxtfname.setEnabled(false);
         edtxtlname.setEnabled(false);
         edtxtphone.setEnabled(false);
         edtxtemail.setEnabled(false);
 
+        //fetch id from the intent
         Bundle extras = getIntent().getExtras();
         id = extras.getInt("id");
 
+        //fetch data for the particular id from the database instance and populate variables
         db= new ContactDb(this);
         ContactInstance display_contact = db.getData(id);
         fname = display_contact.fname ;
@@ -52,6 +57,7 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
         email = display_contact.email;
 
 
+        //set values of various textboxes to display details
         title.setText(fname + " " + lname);
 
         edtxtfname.setText(fname);
@@ -59,19 +65,16 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
         edtxtphone.setText(number);
         edtxtemail.setText(email);
 
+        //add a changed listener to set a flag while editing, (DO NOT SAVE UNTIL ACTUALLY EDITED)
         edtxtfname.addTextChangedListener(this);
         edtxtlname.addTextChangedListener(this);
         edtxtphone.addTextChangedListener(this);
         edtxtemail.addTextChangedListener(this);
 
-
-
+        //set on click listener for the edit cancel and save buttons
         edit.setOnClickListener(this);
         cancel.setOnClickListener(this);
         save.setOnClickListener(this);
-
-
-
     }
 
 
@@ -80,7 +83,9 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch(view.getId()){
+            //check which button is clicked
             case R.id.imageButtonEdit:{
+                //if edit button is pressed, show the save and cancel buttons, hide the edit buttons, and enable the textboxes
                 save.setVisibility(View.VISIBLE);
                 cancel.setVisibility(View.VISIBLE);
                 edit.setVisibility(View.INVISIBLE);
@@ -93,6 +98,7 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
                 break;
             }
             case R.id.buttonCancel:{
+                //if cancelled, revook all that happened in edit button and also replace values of the text fields with the original values, also if the hasChanged flag is set, unset it
                 save.setVisibility(View.INVISIBLE);
                 cancel.setVisibility(View.INVISIBLE);
                 edit.setVisibility(View.VISIBLE);
@@ -110,6 +116,7 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
                 break;
             }
             case R.id.buttonSave:{
+                //when save is pressed, only if the text has changed, trigger the save operation on the contactsDb class
                 if(hasChanged){
                     String new_fname = edtxtfname.getText().toString();
                     String new_lname = edtxtlname.getText().toString();
@@ -126,8 +133,7 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
     }
 
     private void goBackToMain() {
-//        Intent in = new Intent(DisplayContact.this, MainActivity.class);
-//        startActivity(in);
+        //finish this activity to go back to main
         finish();
     }
 
@@ -138,6 +144,7 @@ public class DisplayContact extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        //whenever a user edits a textfield set the haschanged flag
         hasChanged = true;
     }
 

@@ -19,25 +19,28 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * Created by Deepesh on 07/07/2017.
+ * Adapter class to load data, Created by Deepesh on 07/07/2017.
  */
 
 public class ContactsAdapter implements ListAdapter {
-
+    //Declare the variables we shall need
     Context context;
     boolean isOdd = true;
     ArrayList<ContactInstance> ci_list;
 
+    //constructor accepting context and database instance from MainActivity
     public ContactsAdapter(MainActivity con, ContactDb db){
         context =con;
         ci_list = db.getAllContacts();
     }
 
+    //constructor accepting context, database instance and search string from MainActivity
     public ContactsAdapter(MainActivity con, ContactDb db, String search){
         context =con;
         ci_list = db.getAllContacts(search);
     }
     @Override
+
     public boolean areAllItemsEnabled() {
         return false;
     }
@@ -77,8 +80,10 @@ public class ContactsAdapter implements ListAdapter {
         return false;
     }
 
+    //generate each element to be thrown inside the listview buy this adapter
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        //initialise the inflator we use to generate a generic view for each element of the lsitadapter
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View v;
         if (view == null) {
@@ -86,18 +91,22 @@ public class ContactsAdapter implements ListAdapter {
         } else {
             v = view;
         }
+
+        //initialise the elements inside the inflator
         TextView contactName = (TextView) v.findViewById(R.id.contact_name);
         ImageView delete_button = (ImageView) v.findViewById(R.id.delete_button);
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.background);
 
         int clr;
-
+        // extract the data from the data set
         final ContactInstance current_contact = ((ContactInstance) ci_list.get(i));
         contactName.setTag(Integer.valueOf(current_contact.id));
 
+        // define the header info
         final String studInfo = "" + current_contact.fname + " " + current_contact.lname;
         contactName.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
 
+        //set listner to open the contacts details page for the contact name
         contactName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,6 +121,7 @@ public class ContactsAdapter implements ListAdapter {
             }
         });
 
+        //set background colour for every alternate elements
         if(isOdd){
             isOdd = false;
             clr = (Color.parseColor("#cccccc"));
@@ -119,9 +129,9 @@ public class ContactsAdapter implements ListAdapter {
             isOdd = true;
             clr = (Color.parseColor("#e6e6e6"));
         }
-
         layout.setBackgroundColor(clr);
 
+        //append data and set the onclick listener to invoke delete dialog of a contact
         delete_button.setTag(Integer.valueOf(current_contact.id));
         delete_button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,11 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import java.util.ArrayList;
 
+//Main Activity, controller for the activity_main
 public class MainActivity extends AppCompatActivity{
+    //declare the variables we shall need
     ContactDb db;
     ListView lstview;
 
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //set onclick listener for the floating button leading to add contact page
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,11 +41,16 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        // instantiate the database
         db = new ContactDb(getApplicationContext());
+
+        //instantiate the lsitview to be populated
         lstview = (ListView)findViewById(R.id.listView1);
 
+        //instantiate the search bar
         EditText search = (EditText) findViewById(R.id.search_bar);
 
+        //add a text change listener to the search bar
         search.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -53,6 +59,7 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //set the adapter for the listview to a set of contacts matching the searchbar string
                 lstview.setAdapter(new ContactsAdapter(MainActivity.this,db,charSequence.toString()));
             }
 
@@ -65,10 +72,12 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        //set the adapter of the listview to all the contacts
         lstview.setAdapter(new ContactsAdapter(MainActivity.this,db));
     }
 
 
+    //show a confirm box before deleting (called in the 2 Adapter classes)
     public void showDeleteDialog(String name, final int id_no) throws Resources.NotFoundException {
         new AlertDialog.Builder(this)
             .setTitle("Delete Contact")
@@ -100,19 +109,20 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-
+    //Prevent closing of app when back is pressed on mainActivity
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
     }
 
+    //Populate Menu Options
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    //Set Listener for various menu options
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 //            case R.id.view_log:
