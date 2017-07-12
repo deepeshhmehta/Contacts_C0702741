@@ -11,7 +11,7 @@ public class ContactInstance {
     public String email;
     public String contact_no;
 
-    public ContactInstance(int id, String fname, String lname, String email, String contact_no) {
+    public ContactInstance(int id, String fname, String lname,  String contact_no, String email) {
         this.id = id;
         this.fname = fname;
         this.lname = lname;

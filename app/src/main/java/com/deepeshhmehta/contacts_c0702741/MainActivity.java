@@ -3,9 +3,6 @@ package com.deepeshhmehta.contacts_c0702741;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -13,27 +10,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements ListAdapter{
-    boolean isOdd = true;
+public class MainActivity extends AppCompatActivity{
     ContactDb db;
-    ArrayList<ContactInstance> ci_list;
     ListView lstview;
 
     @Override
@@ -56,38 +43,21 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
         db = new ContactDb(this);
         lstview = (ListView)findViewById(R.id.listView1);
 
-        //obj.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-        //    @Override
-        //    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
-        //        // TODO Auto-generated method stub
-        //        int id_To_Search = arg2 + 1;
-        //
-        //        Bundle dataBundle = new Bundle();
-        //        dataBundle.putInt("id", id_To_Search);
-        //
-        //        Intent intent = new Intent(getApplicationContext(),DisplayContact.class);
-        //
-        //        intent.putExtras(dataBundle);
-        //        startActivity(intent);
-        //    }
-        //});
-
         EditText search = (EditText) findViewById(R.id.search_bar);
+
         search.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ci_list = db.getAllContacts(charSequence.toString());
-                lstview.setAdapter(MainActivity.this);
+                lstview.setAdapter(new ContactsAdapter(MainActivity.this,db,charSequence.toString()));
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -95,108 +65,11 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
     @Override
     protected void onResume() {
         super.onResume();
-        ci_list = db.getAllContacts();
-        lstview.setAdapter(this);
+        lstview.setAdapter(new ContactsAdapter(MainActivity.this,db));
     }
 
-    @Override
-    public boolean areAllItemsEnabled() {
-        return false;
-    }
 
-    @Override
-    public boolean isEnabled(int i) {
-        return false;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-
-    }
-
-    @Override
-    public int getCount() {
-        return ci_list.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return ci_list.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(this.LAYOUT_INFLATER_SERVICE);
-        View v;
-        if (view == null) {
-            v = inflater.inflate(R.layout.contact_details_view, null);
-        } else {
-            v = view;
-        }
-        TextView contactName = (TextView) v.findViewById(R.id.contact_name);
-        ImageView delete_button = (ImageView) v.findViewById(R.id.delete_button);
-        LinearLayout layout = (LinearLayout) v.findViewById(R.id.background);
-
-        int clr;
-
-        final ContactInstance current_contact = ((ContactInstance) ci_list.get(i));
-        contactName.setTag(Integer.valueOf(current_contact.id));
-
-        final String studInfo = "" + current_contact.fname + " " + current_contact.lname;
-        contactName.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
-
-        contactName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int id_To_Search = (int) ((TextView) view).getTag();
-
-                        Bundle dataBundle = new Bundle();
-                        dataBundle.putInt("id", id_To_Search);
-
-                        Intent intent = new Intent(getApplicationContext(),DisplayContact.class);
-                        intent.putExtras(dataBundle);
-                        startActivity(intent);
-            }
-        });
-
-        if(isOdd){
-            isOdd = false;
-            clr = (Color.parseColor("#cccccc"));
-        }else{
-            isOdd = true;
-            clr = (Color.parseColor("#e6e6e6"));
-        }
-
-        layout.setBackgroundColor(clr);
-
-        delete_button.setTag(Integer.valueOf(current_contact.id));
-        delete_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDeleteDialog(studInfo,current_contact.id);
-            }
-        });
-
-
-        return v;
-    }
-
-    private void showDeleteDialog(String name, final int id_no) throws Resources.NotFoundException {
+    public void showDeleteDialog(String name, final int id_no) throws Resources.NotFoundException {
         new AlertDialog.Builder(this)
             .setTitle("Delete Contact")
             .setMessage("Are you sure you want to delete " + name)
@@ -227,24 +100,29 @@ public class MainActivity extends AppCompatActivity implements ListAdapter{
     }
 
 
-    @Override
-    public int getItemViewType(int i) {
-        return 0;
-    }
 
     @Override
-    public int getViewTypeCount() {
-        return 1;
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
-    @Override
-    public boolean isEmpty() {
-        return false;
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    private void goBackToMain() {
-        Intent in = new Intent(MainActivity.this, MainActivity.class);
-        startActivity(in);
-        finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.view_log:
+                //startActivity(new Intent(this, About.class));
+                return true;
+            case R.id.view_deleted:
+                startActivity(new Intent(this, DeletedView.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

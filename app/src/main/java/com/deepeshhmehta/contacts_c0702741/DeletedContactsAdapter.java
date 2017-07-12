@@ -1,42 +1,38 @@
 package com.deepeshhmehta.contacts_c0702741;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.database.DataSetObserver;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.TextView;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.database.DataSetObserver;
+        import android.graphics.Color;
+        import android.os.Bundle;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.ImageView;
+        import android.widget.LinearLayout;
+        import android.widget.ListAdapter;
+        import android.widget.TextView;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
 /**
- * Created by Deepesh on 07/07/2017.
+ * Created by Deepesh on 11/07/2017.
  */
 
-public class ContactsAdapter implements ListAdapter {
+
+public class DeletedContactsAdapter implements ListAdapter {
 
     Context context;
     boolean isOdd = true;
     ArrayList<ContactInstance> ci_list;
 
-    public ContactsAdapter(MainActivity con, ContactDb db){
+    public DeletedContactsAdapter(Context con, ContactDb db){
+        Log.d("DeletedCOntactsAdapter","called");
         context =con;
-        ci_list = db.getAllContacts();
+        ci_list = db.getAllDeletedContacts();
     }
 
-    public ContactsAdapter(MainActivity con, ContactDb db, String search){
-        context =con;
-        ci_list = db.getAllContacts(search);
-    }
     @Override
     public boolean areAllItemsEnabled() {
         return false;
@@ -97,6 +93,7 @@ public class ContactsAdapter implements ListAdapter {
 
         final String studInfo = "" + current_contact.fname + " " + current_contact.lname;
         contactName.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
+        Log.d("Deleted Contact: ", studInfo);
 
         contactName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,13 +119,7 @@ public class ContactsAdapter implements ListAdapter {
 
         layout.setBackgroundColor(clr);
 
-        delete_button.setTag(Integer.valueOf(current_contact.id));
-        delete_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)context).showDeleteDialog(studInfo,current_contact.id);
-            }
-        });
+        delete_button.setVisibility(View.INVISIBLE);
 
 
         return v;
@@ -149,6 +140,4 @@ public class ContactsAdapter implements ListAdapter {
     public boolean isEmpty() {
         return false;
     }
-
-
 }
