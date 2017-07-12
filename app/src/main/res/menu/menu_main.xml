@@ -2,11 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.deepeshhmehta.contacts_c0702741.MainActivity">
-    <item
-        android:id="@+id/view_log"
-        android:orderInCategory="100"
-        android:title="@string/view_log"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/view_log"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/view_log"-->
+        <!--app:showAsAction="never" />-->
     <item
         android:id="@+id/view_deleted"
         android:orderInCategory="100"

@@ -115,10 +115,11 @@ public class MainActivity extends AppCompatActivity{
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.view_log:
-                //startActivity(new Intent(this, About.class));
-                return true;
+//            case R.id.view_log:
+//                //startActivity(new Intent(this, About.class));
+//                return true;
             case R.id.view_deleted:
+                //lstview.setAdapter(new DeletedContactsAdapter(MainActivity.this,db));
                 startActivity(new Intent(this, DeletedView.class));
                 return true;
             default:

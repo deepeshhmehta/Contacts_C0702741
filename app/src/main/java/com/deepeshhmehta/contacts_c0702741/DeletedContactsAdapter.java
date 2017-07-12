@@ -14,6 +14,7 @@ package com.deepeshhmehta.contacts_c0702741;
         import android.widget.ListAdapter;
         import android.widget.TextView;
 
+        import java.text.ParseException;
         import java.util.ArrayList;
 
 /**
@@ -27,7 +28,7 @@ public class DeletedContactsAdapter implements ListAdapter {
     boolean isOdd = true;
     ArrayList<ContactInstance> ci_list;
 
-    public DeletedContactsAdapter(Context con, ContactDb db){
+    public DeletedContactsAdapter(Context con, ContactDb db) throws ParseException {
         Log.d("DeletedCOntactsAdapter","called");
         context =con;
         ci_list = db.getAllDeletedContacts();
@@ -78,12 +79,12 @@ public class DeletedContactsAdapter implements ListAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
         View v;
         if (view == null) {
-            v = inflater.inflate(R.layout.contact_details_view, null);
+            v = inflater.inflate(R.layout.deleted_contact_details_view, null);
         } else {
             v = view;
         }
         TextView contactName = (TextView) v.findViewById(R.id.contact_name);
-        ImageView delete_button = (ImageView) v.findViewById(R.id.delete_button);
+        TextView deleted_on = (TextView) v.findViewById(R.id.deleted_date);
         LinearLayout layout = (LinearLayout) v.findViewById(R.id.background);
 
         int clr;
@@ -95,19 +96,6 @@ public class DeletedContactsAdapter implements ListAdapter {
         contactName.setText(studInfo);     //txtStudent.setText((String)this.getItem(position));
         Log.d("Deleted Contact: ", studInfo);
 
-        contactName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int id_To_Search = (int) ((TextView) view).getTag();
-
-                Bundle dataBundle = new Bundle();
-                dataBundle.putInt("id", id_To_Search);
-
-                Intent intent = new Intent(context.getApplicationContext(),DisplayContact.class);
-                intent.putExtras(dataBundle);
-                context.startActivity(intent);
-            }
-        });
 
         if(isOdd){
             isOdd = false;
@@ -119,7 +107,8 @@ public class DeletedContactsAdapter implements ListAdapter {
 
         layout.setBackgroundColor(clr);
 
-        delete_button.setVisibility(View.INVISIBLE);
+        deleted_on.setText(current_contact.deleted_on);
+
 
 
         return v;

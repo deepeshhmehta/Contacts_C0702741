@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
+import java.text.ParseException;
+
 public class DeletedView extends AppCompatActivity {
 
     ListView lstview;
@@ -22,6 +24,10 @@ public class DeletedView extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d("Deleted On Resume", "started");
-        lstview.setAdapter(new DeletedContactsAdapter(DeletedView.this,db));
+        try {
+            lstview.setAdapter(new DeletedContactsAdapter(DeletedView.this,db));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

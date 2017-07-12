@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +28,7 @@ public class ContactDb extends SQLiteOpenHelper {
 
     public static final String log_table_name = "log";
     public static final String[] log_columns = {"id","contact_id","action","time"};
-    public static final String[] log_columns_type = {"INTEGER PRIMARY KEY AUTOINCREMENT,","INTEGER,","INTEGER,","Datetime"};
+    public static final String[] log_columns_type = {"INTEGER PRIMARY KEY AUTOINCREMENT,","INTEGER,","INTEGER,","datetime default current_timestamp"};
 
     public static final String delete_table_name = "deleted_contacts";
     public static final String[] deleted_contacts_columns={ "id",
@@ -35,7 +36,7 @@ public class ContactDb extends SQLiteOpenHelper {
                                                             "number","email","datetime"};
     public static final String[] deleted_contacts_columns_type={ "INTEGER PRIMARY KEY AUTOINCREMENT,",
                                                         "varchar(50) NOT NULL,","varchar(50),",
-                                                        "number(20)NOT NULL,", "varchar(50),", "Datetime"};
+                                                        "number(20)NOT NULL,", "varchar(50),", "datetime default current_timestamp"};
 
     public ContactDb(Context context) {
         super(context.getApplicationContext(), db_name , null, 3);
@@ -127,10 +128,10 @@ public class ContactDb extends SQLiteOpenHelper {
     public boolean addAContact(String fname,String lname,String number,String email){
         try{
             String sql = "insert into " + this.table_name + " values (null,'"+fname+"' ,'"+lname+"',"+number+",'"+email+"',1); select last_insert_rowid()";
-            Cursor id = this.getReadableDatabase().rawQuery(sql,null);
+            Cursor id = this.getWritableDatabase().rawQuery(sql,null);
             if (id.moveToFirst()){
-                sql = "insert into " + this.log_table_name + " values (null,"+id+" ,1,datetime()');";
-                this.getReadableDatabase().rawQuery(sql,null);
+                sql = "insert into " + this.log_table_name + " values (null,"+id+" ,1,null');";
+                this.getWritableDatabase().rawQuery(sql,null);
             }
 
             return true;
@@ -151,8 +152,8 @@ public class ContactDb extends SQLiteOpenHelper {
     public int update(ContactInstance contact) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String sql = "insert into " + this.log_table_name + " values (null,"+contact.id+" ,2,datetime());";
-        this.getReadableDatabase().rawQuery(sql,null);
+        String sql = "insert into " + this.log_table_name + " values (null,"+contact.id+" ,2,null);";
+        db.rawQuery(sql,null);
 
         ContentValues values = new ContentValues();
         values.put("fname", contact.fname);
@@ -168,11 +169,18 @@ public class ContactDb extends SQLiteOpenHelper {
     }
 
     public int deleteAContact(int id){
+        ContactInstance ci = getData(id);
         SQLiteDatabase db = this.getWritableDatabase();
-        String sql = "insert into " + this.log_table_name + " values (null,"+id+" ,3,datetime());";
-        this.getReadableDatabase().rawQuery(sql,null);
-        sql = "insert into " + this.delete_table_name + "(fname,lname,number,email,datetime) select fname,lname,number,email,datetime() from "+this.table_name+" where id = "+id+";";
-        this.getReadableDatabase().rawQuery(sql,null);
+        String sql = "insert into " + this.log_table_name + " values (null,"+id+" ,3,null);";
+        db.rawQuery(sql,null);
+        ContentValues conv = new ContentValues();
+        conv.put("fname", ci.fname);
+        conv.put("lname",ci.lname);
+        conv.put("number",ci.contact_no);
+        conv.put("email",ci.email);
+//        sql = "insert into " + this.delete_table_name + " values (null, '" + ci.fname + "', '" + ci.lname + "', " + ci.contact_no + ", '"+ ci.email+"', null);" ;
+//        db.rawQuery(sql,null);
+        Log.d("delete Inserted",String.valueOf(db.insert(delete_table_name,null,conv)));
 
         ContentValues values = new ContentValues();
         values.put("active", 0);
@@ -181,22 +189,20 @@ public class ContactDb extends SQLiteOpenHelper {
                 new String[] { (String.valueOf(id))});
     }
 
-    public ArrayList<ContactInstance> getAllDeletedContacts() {
+    public ArrayList<ContactInstance> getAllDeletedContacts() throws ParseException {
         ArrayList<ContactInstance> ci_list = new ArrayList<ContactInstance>();
 
 
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from " + this.delete_table_name +
-                " Order By fname", null );
+        Cursor res =  db.rawQuery( "select * from " + this.delete_table_name +" Order By fname", null );
         res.moveToFirst();
+        Log.d("rows-deleted: ",String.valueOf(res.getCount()));
 
-        Log.d("from contacts db", "query called");
 
         while(res.isAfterLast() == false){
-            ci_list.add(new ContactInstance(Integer.parseInt(res.getString(0)),res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
+            ci_list.add(new ContactInstance(Integer.parseInt(res.getString(0)),res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5)));
             Log.d("from contacts db", res.getString(1));
-            //name.add(res.getString(res.getColumnIndex(this.contacts_columns[1])) + " " + res.getString(res.getColumnIndex(this.contacts_columns[2])));
             res.moveToNext();
         }
         return ci_list;
