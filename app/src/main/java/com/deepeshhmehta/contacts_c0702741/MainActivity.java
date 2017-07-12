@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        db = new ContactDb(this);
+        db = new ContactDb(getApplicationContext());
         lstview = (ListView)findViewById(R.id.listView1);
 
         EditText search = (EditText) findViewById(R.id.search_bar);

@@ -14,7 +14,7 @@ public class DeletedView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_deleted_view);
         lstview = (ListView) findViewById(R.id.listView_deleted);
-        db = new ContactDb(this.getApplicationContext());
+        db = new ContactDb(getApplicationContext());
 
     }
 
